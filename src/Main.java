@@ -1,50 +1,68 @@
-import javax.swing.*;
+import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
 
         int n = 0;
-        boolean validInput = false;
-
-        while (!validInput) {
-            String input = JOptionPane.showInputDialog(null, "Введите размер массива (целое число):");
-            if (input == null) {
-                return;
-            }
-            try {
-                n = Integer.parseInt(input);
-                if (n <= 0) {
-                    JOptionPane.showMessageDialog(null, "Размер массива должен быть положительным целым числом.");
+        while (true) {
+            System.out.print("Введите размер массива (положительное целое число): ");
+            if (scanner.hasNextInt()) {
+                n = scanner.nextInt();
+                if (n > 0) {
+                    break;
                 } else {
-                    validInput = true;
+                    System.out.println("Размер массива должен быть положительным числом.");
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Некорректный ввод: введите целое число.");
+            } else {
+                System.out.println("Некорректный ввод. Пожалуйста, введите целое число.");
+                scanner.next(); 
             }
         }
 
+        double x = 0, y = 0;
+        while (true) {
+            System.out.print("Введите нижнюю границу диапазона (вещественное число): ");
+            if (scanner.hasNextDouble()) {
+                x = scanner.nextDouble();
+                break;
+            } else {
+                System.out.println("Некорректный ввод. Пожалуйста, введите вещественное число.");
+                scanner.next(); 
+            }
+        }
 
-        int[] array = new Random().ints(n, 0, 101).toArray();
-        int[] reversedArray = new int[n];
+        while (true) {
+            System.out.print("Введите верхнюю границу диапазона (вещественное число): ");
+            if (scanner.hasNextDouble()) {
+                y = scanner.nextDouble();
+                if (y > x) {
+                    break;
+                } else {
+                    System.out.println("Верхняя граница должна быть больше нижней границы.");
+                }
+            } else {
+                System.out.println("Некорректный ввод. Пожалуйста, введите вещественное число.");
+                scanner.next(); 
+            }
+        }
 
-
+        double[] array = new double[n];
+        Random random = new Random();
         for (int i = 0; i < n; i++) {
-            reversedArray[i] = array[n - 1 - i];
+            array[i] = x + (y - x) * random.nextDouble();
         }
 
-
-        StringBuilder originalArrayStr = new StringBuilder("Исходный массив:\n");
-        for (int num : array) {
-            originalArrayStr.append(num).append("\n");
+        double sum = 0;
+        for (double num : array) {
+            sum += num;
         }
 
-        StringBuilder reversedArrayStr = new StringBuilder("Обращенный массив:\n");
-        for (int num : reversedArray) {
-            reversedArrayStr.append(num).append("\n");
-        }
+        double average = sum / n;
 
-
-        JOptionPane.showMessageDialog(null, originalArrayStr.toString() + "\n" + reversedArrayStr.toString());
+        System.out.println("Сумма элементов массива: " + sum);
+        System.out.println("Среднее арифметическое значение массива: " + average);
     }
 }
